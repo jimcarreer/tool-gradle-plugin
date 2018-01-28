@@ -12,10 +12,14 @@ class BuildHelperPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
 
+        project.extensions.extraProperties.set('addPropertyFile', null)
         project.extensions.add('branchBasedVersion', GitTools.&branchBasedVersion)
+        Boolean addProperties = project.extensions.extraProperties.get('addPropertyFile')
 
-        project.tasks.getByName('build').dependsOn(
-                project.tasks.create('createPropertyFile', BuildPropertyFile)
-        )
+        if (addProperties == null || addProperties) {
+            project.tasks.getByName('build').dependsOn(
+                    project.tasks.create('createPropertyFile', BuildPropertyFile)
+            )
+        }
     }
 }
