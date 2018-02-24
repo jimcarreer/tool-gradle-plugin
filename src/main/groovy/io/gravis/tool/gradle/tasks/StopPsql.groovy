@@ -20,7 +20,7 @@ class StopPsql extends DefaultTask {
         }
 
         String id = imageIdFile.readLines()[0]
-        DockerRemoveContainer remove = project.tasks.create('removePsqlDockerContainer', DockerRemoveContainer)
+        DockerRemoveContainer remove = project.tasks.maybeCreate('removePsqlDockerContainer', DockerRemoveContainer)
         remove.force = true
         remove.removeVolumes = true
         remove.containerId = id
