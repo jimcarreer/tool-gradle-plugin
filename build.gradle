@@ -2,7 +2,6 @@ group 'io.gravis'
 version '1.0'
 
 apply plugin: 'groovy'
-apply plugin: 'java'
 apply plugin: 'maven'
 
 repositories {
@@ -12,6 +11,7 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    compile group: 'org.apache.maven', name: 'maven-artifact', version: '3.5.2'
-    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+    compile 'org.apache.maven:maven-artifact:3.5.2'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:2.2.0.201212191850-r'
+    compile 'com.bmuschko:gradle-docker-plugin:3.0.12'
 }
