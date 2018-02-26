@@ -1,6 +1,7 @@
 package io.gravis.tool.gradle.util
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Ref
@@ -10,6 +11,7 @@ import org.gradle.api.GradleException
 import java.util.regex.Matcher
 
 @CompileStatic
+@Slf4j
 class GitTools {
 
     private static Repository REPO
@@ -34,15 +36,23 @@ class GitTools {
             throw new GradleException("Version ${majorMinor} supplied is an invalid format: must by X.Y")
         }
 
-        String branch = branchName()
-        switch (branch) {
-            case BRANCH_DEVELOP:
-                return "${majorMinor}-SNAPSHOT"
-            case BRANCH_MASTER:
-                String patch = getPatchFromTag(majorMinor)
-                return "${majorMinor}.${patch}"
-            default:
-                return "${majorMinor}-${branch}-SNAPSHOT"
+        try {
+            String branch = branchName()
+            switch (branch) {
+                case BRANCH_DEVELOP:
+                    return "${majorMinor}-SNAPSHOT"
+                case BRANCH_MASTER:
+                    String patch = getPatchFromTag(majorMinor)
+                    return "${majorMinor}.${patch}"
+                default:
+                    return "${majorMinor}-${branch}-SNAPSHOT"
+            }
+
+        } catch (IllegalArgumentException e) {
+            if (!e.message.contains('setGitDir or setWorkTree'))
+                throw e
+            log.warn("No git repository appears to be initialized returning ${majorMinor}.0")
+            return "${majorMinor}.0"
         }
     }
 
