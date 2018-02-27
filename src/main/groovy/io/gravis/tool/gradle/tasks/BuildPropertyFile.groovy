@@ -16,10 +16,6 @@ class BuildPropertyFile extends DefaultTask  {
     final private static String FILE_PATH = 'resources/main/build.properties'
     final private static String DATE_FORMAT = 'yyyy-MM-dd\'T\'HH:mm:ss.SSSZ'
 
-    @Input
-    @Optional
-    Boolean makeFile = true
-
     @OutputFile
     File propertyFile
 
@@ -33,8 +29,8 @@ class BuildPropertyFile extends DefaultTask  {
     @TaskAction
     void run() {
 
-        if (!makeFile) {
-            logger.info('Build property file task disabled')
+        if (project.rootProject.name.startsWith('lib-')) {
+            logger.debug('Project appears to be library no build properties will be generated')
             return
         }
 
