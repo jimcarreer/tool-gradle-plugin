@@ -41,7 +41,7 @@ class StartPsql extends DefaultTask {
     File idFile
 
     private String imageName = "test-psql-${project.name}"
-    private String imageIdFile = "${project.buildDir}/.${imageName}.dockerid"
+    private String imageIdFile = "${project.rootDir}/.${imageName}.dockerid"
 
     StartPsql() {
 

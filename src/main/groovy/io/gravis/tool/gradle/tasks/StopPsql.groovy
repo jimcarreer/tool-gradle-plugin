@@ -9,7 +9,7 @@ import org.gradle.api.tasks.TaskAction
 class StopPsql extends DefaultTask {
 
     private String imageName = "test-psql-${project.name}"
-    private File imageIdFile = new File("${project.buildDir}/.${imageName}.dockerid")
+    private File imageIdFile = new File("${project.rootDir}/.${imageName}.dockerid")
 
     @TaskAction
     void run() {
