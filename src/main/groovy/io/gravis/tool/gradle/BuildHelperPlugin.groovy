@@ -13,7 +13,7 @@ class BuildHelperPlugin implements Plugin<Project> {
     void apply(Project project) {
 
         project.extensions.add('branchBasedVersion', GitTools.&branchBasedVersion)
-        project.tasks.getByName('build').dependsOn(
+        project.tasks.getByName('processResources').dependsOn(
                 project.tasks.create('createPropertyFile', BuildPropertyFile)
         )
     }
