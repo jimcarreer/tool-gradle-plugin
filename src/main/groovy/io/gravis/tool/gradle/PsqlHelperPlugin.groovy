@@ -13,6 +13,7 @@ import org.gradle.api.Project
 class PsqlHelperPlugin implements Plugin<Project> {
 
     private static final String STOP_TASK = 'stopPsql'
+    private static final String STOP_OLD_TASK = 'destroyOldPsqlDockerContainer'
     private static final String PULL_TASK = 'pullPsqlDockerImage'
     private static final String CREATE_TASK = 'createPsqlDockerContainer'
     private static final String START_TASK = 'startPsql'
@@ -27,15 +28,16 @@ class PsqlHelperPlugin implements Plugin<Project> {
         config = project.extensions.create('psqlConfig', PsqlConfiguration)
         containerName = "test-psql-${project.name}"
 
-        addStopTask(project)
+        addStopTask(project, STOP_OLD_TASK)
+        addStopTask(project, STOP_TASK)
         addPullTask(project)
         addCreateTask(project)
         addStartTask(project)
     }
 
-    protected addStopTask(Project project) {
+    protected addStopTask(Project project, String name) {
 
-        DockerRemoveContainer stop = project.tasks.create(STOP_TASK, DockerRemoveContainer)
+        DockerRemoveContainer stop = project.tasks.create(name, DockerRemoveContainer)
         stop.configure({ DockerRemoveContainer task ->
             task.force = true
             task.removeVolumes = true
@@ -61,7 +63,7 @@ class PsqlHelperPlugin implements Plugin<Project> {
     protected addCreateTask(Project project) {
 
         project.tasks.create(CREATE_TASK, DockerCreateContainer)
-            .dependsOn(PULL_TASK, STOP_TASK)
+            .dependsOn(PULL_TASK, STOP_OLD_TASK)
             .configure({ DockerCreateContainer task ->
                 task.targetImageId { "postgres:${config.version}".toString() }
                 task.containerName = containerName
