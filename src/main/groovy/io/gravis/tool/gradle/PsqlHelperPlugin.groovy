@@ -43,7 +43,7 @@ class PsqlHelperPlugin implements Plugin<Project> {
         })
         stop.onError = { Exception error ->
             if (error.message.contains('No such container'))
-                stop.logger.quiet("No container with Id test-psql-${project.name} continuing ...")
+                stop.logger.quiet("No container with Id ${containerName} continuing ...")
             else
                 throw error
         }
